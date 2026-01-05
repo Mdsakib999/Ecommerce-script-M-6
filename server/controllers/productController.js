@@ -1,0 +1,118 @@
+const Product = require('../models/Product');
+const cloudinary = require('../config/cloudinary');
+const uploadFromBuffer = require('../utils/uploadFromBuffer');
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp"
+];
+// Get all products
+exports.getProducts = async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+// Get single product by ID
+exports.getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({
+      message: 'Product not found'
+    });
+    res.json(product);
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
+// update product
+exports.updateProduct = async (req, res) => {
+  try {
+    const updateData = { ...req.body };
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({
+      message: 'Product not found'
+    });
+    if (req.file && req.file.size > 5 * 1024 * 1024) {
+      return res.status(400).json({ message: 'Image must be under 5MB' });
+    }
+    if (req.file) {
+      if (product.imagePublicId) {
+        await cloudinary.uploader.destroy(product.imagePublicId);
+      }
+      const uploadResult = await uploadFromBuffer(req.file.buffer);
+      updateData.imageUrl = uploadResult.secure_url;
+      updateData.imagePublicId = uploadResult.public_id;
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+//Delete product
+exports.deleteProduct = async (req, res) => {
+  try {
+
+    const product = await Product.findById(req.params.id);
+    // Delete image from Cloudinary
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    if (product.imageUrl && product.imagePublicId) {
+      await cloudinary.uploader.destroy(product.imagePublicId);
+    }
+    await product.deleteOne();
+    res.json({ message: "Product deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
+
+// Create new product
+exports.createProduct = async (req, res) => {
+  try {
+    const { name, description, price, countInStock, category } = req.body;
+
+    if (!name || !description || !price) {
+      return res.status(400).json({ message: "Required fields missing" });
+    }
+
+    let imageUrl = "";
+    let imagePublicId = "";
+
+    if (!ALLOWED_MIME_TYPES.includes(req.file.mimetype)) {
+      return res.status(400).json({
+        message: "Invalid file type. Only JPG, PNG, WEBP allowed."
+      });
+    }
+
+
+    if (req.file) {
+      const uploadResult = await uploadFromBuffer(req.file.buffer);
+      imageUrl = uploadResult.secure_url;
+      imagePublicId = uploadResult.public_id;
+    }
+
+    const product = new Product({
+      name,
+      description,
+      price,
+      imageUrl,
+      imagePublicId,
+      countInStock: countInStock || 0,
+      category: category || "",
+    });
+    const createdProduct = await product.save();
+    res.status(201).json(createdProduct);
+  } catch (error) {
+    res.status(500).json({ message: "Product Creation Failed", error: error.message });
+  }
+};
