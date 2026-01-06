@@ -1,19 +1,15 @@
 import { initializeApp } from "firebase/app";
-import {getAuth} from 'firebase/auth';
-import { 
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
+import {
+  createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup,
   signOut
 } from 'firebase/auth';
 const firebaseConfig = {
-  apiKey: "AIzaSyALgH5R-Jcni4Gq2dCLg4a3Ym5tuoPKfq8",
-  authDomain: "ecommerce-mern-smit.firebaseapp.com",
-  projectId: "ecommerce-mern-smit",
-  storageBucket: "ecommerce-mern-smit.firebasestorage.app",
-  messagingSenderId: "1006695246380",
-  appId: "1:1006695246380:web:a0eb5f1430d0b74a733f89"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
