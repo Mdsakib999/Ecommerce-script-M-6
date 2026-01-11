@@ -1,23 +1,29 @@
 import {
-    CubeIcon,
-    CurrencyDollarIcon,
-    DocumentTextIcon,
-    FolderIcon,
-    PhotoIcon,
-    TagIcon,
+  CubeIcon,
+  CurrencyDollarIcon,
+  DocumentTextIcon,
+  FolderIcon,
+  MinusIcon,
+  PhotoIcon,
+  PlusIcon,
+  TagIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
 
-export default function CreateProductForm({ onProductCreated,token }) {
+export default function CreateProductForm({ onProductCreated, token }) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [discountPrice, setDiscountPrice] = useState("");
   const [image, setImage] = useState(null);
   const [countInStock, setCountInStock] = useState("");
   const [category, setCategory] = useState("");
+  const [specifications, setSpecifications] = useState([
+    { key: "", value: "" },
+  ]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -35,6 +41,22 @@ export default function CreateProductForm({ onProductCreated,token }) {
     fetchCategories();
   }, []);
 
+  const handleAddField = () => {
+    setSpecifications([...specifications, { key: "", value: "" }]);
+  };
+
+  const handleRemoveField = (index) => {
+    const values = [...specifications];
+    values.splice(index, 1);
+    setSpecifications(values);
+  };
+
+  const handleSpecChange = (index, event) => {
+    const values = [...specifications];
+    values[index][event.target.name] = event.target.value;
+    setSpecifications(values);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -46,9 +68,18 @@ export default function CreateProductForm({ onProductCreated,token }) {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("price", price);
+      if (discountPrice) {
+        formData.append("discountPrice", discountPrice);
+      }
       formData.append("countInStock", countInStock);
       formData.append("category", category);
       formData.append("image", image); // MUST match upload.single("image")
+
+      // Filter out empty specs and stringify
+      const filteredSpecs = specifications.filter(
+        (s) => s.key.trim() && s.value.trim()
+      );
+      formData.append("specifications", JSON.stringify(filteredSpecs));
 
       const { data: newProduct } = await api.post("/api/products", formData, {
         headers: {
@@ -67,9 +98,11 @@ export default function CreateProductForm({ onProductCreated,token }) {
       setName("");
       setDescription("");
       setPrice("");
+      setDiscountPrice("");
       setImage(null);
       setCountInStock("");
       setCategory("");
+      setSpecifications([{ key: "", value: "" }]);
 
       setTimeout(() => setSuccess(false), 3000);
     } catch (err) {
@@ -157,6 +190,18 @@ export default function CreateProductForm({ onProductCreated,token }) {
             required
           />
 
+          {/* Discount Price */}
+          <Input
+            type="number"
+            label="Discount Price (৳) (Optional)"
+            placeholder="0.00"
+            value={discountPrice}
+            onChange={(e) => setDiscountPrice(e.target.value)}
+            leftIcon={<CurrencyDollarIcon className="w-5 h-5" />}
+            step="0.01"
+            min="0"
+          />
+
           {/* Stock Count */}
           <Input
             type="number"
@@ -196,6 +241,58 @@ export default function CreateProductForm({ onProductCreated,token }) {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all resize-none"
             required
           />
+        </div>
+
+        {/* Specifications */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="block text-sm font-medium text-gray-700">
+              Technical Specifications
+            </label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleAddField}
+              leftIcon={<PlusIcon className="w-4 h-4" />}
+              className="text-cyan-600"
+            >
+              Add Detail
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {specifications.map((spec, index) => (
+              <div
+                key={index}
+                className="flex gap-3 items-center animate-scale-in"
+              >
+                <input
+                  name="key"
+                  placeholder="e.g. Material"
+                  value={spec.key}
+                  onChange={(e) => handleSpecChange(index, e)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none text-sm"
+                />
+                <input
+                  name="value"
+                  placeholder="e.g. 100% Cotton"
+                  value={spec.value}
+                  onChange={(e) => handleSpecChange(index, e)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:outline-none text-sm"
+                />
+                {specifications.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveField(index)}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <MinusIcon className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Submit Button */}

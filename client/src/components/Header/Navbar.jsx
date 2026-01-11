@@ -122,7 +122,8 @@ export default function Navbar() {
           {/* Right Side - Cart & Auth */}
           <div className="flex items-center gap-3">
             {/* Cart Link */}
-            <button onClick={openCart}
+            <button
+              onClick={openCart}
               className="relative p-2 text-gray-700 hover:text-cyan-600 transition-colors"
             >
               <ShoppingCartIcon className="w-6 h-6" />

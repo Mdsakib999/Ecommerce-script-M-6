@@ -30,8 +30,13 @@ const ProductCard = ({ product }) => {
   return (
     <div className="group w-full bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
       <Link to={`/products/${product._id}`} className="relative">
-        {/* Stock Status Badge */}
+        {/* Stock Status & Sale Badge */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
+          {product.discountPrice > 0 && (
+            <Badge variant="success" size="sm" className="bg-red-500 text-white border-none shadow-sm">
+              {Math.round(((product.price - product.discountPrice) / product.price) * 100)}% OFF
+            </Badge>
+          )}
           {isOutOfStock && (
             <Badge variant="error" size="sm">Out of Stock</Badge>
           )}
@@ -60,8 +65,21 @@ const ProductCard = ({ product }) => {
 
           {/* Price and Stock */}
           <div className="flex items-center justify-between mb-2">
-            <div className="text-2xl font-bold text-gray-900">
-              ৳{Number(product.price).toFixed(2)}
+            <div className="flex flex-col">
+              {product.discountPrice > 0 ? (
+                <>
+                  <span className="text-2xl font-bold text-gray-900 leading-none">
+                    ৳{Number(product.discountPrice).toFixed(2)}
+                  </span>
+                  <span className="text-sm text-gray-400 line-through mt-1">
+                    ৳{Number(product.price).toFixed(2)}
+                  </span>
+                </>
+              ) : (
+                <span className="text-2xl font-bold text-gray-900">
+                  ৳{Number(product.price).toFixed(2)}
+                </span>
+              )}
             </div>
             {isOutOfStock ? (
               <Badge variant="error" size="sm">Out of Stock</Badge>

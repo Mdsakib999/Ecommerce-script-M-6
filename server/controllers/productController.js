@@ -73,6 +73,18 @@ exports.getProductById = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const updateData = { ...req.body };
+
+    // Parse specifications if sent as string
+    if (updateData.specifications) {
+      try {
+        updateData.specifications = typeof updateData.specifications === 'string'
+          ? JSON.parse(updateData.specifications)
+          : updateData.specifications;
+      } catch (err) {
+        console.error("Specs parsing error during update", err);
+      }
+    }
+
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({
       message: 'Product not found'
@@ -116,7 +128,18 @@ exports.deleteProduct = async (req, res) => {
 // Create new product
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, countInStock, category } = req.body;
+    const { name, description, price, discountPrice, countInStock, category, specifications } = req.body;
+
+    // Parse specifications if sent as string
+    let specs = [];
+    if (specifications) {
+      try {
+        specs = typeof specifications === 'string' ? JSON.parse(specifications) : specifications;
+      } catch (err) {
+        console.error("Specs parsing error", err);
+        return res.status(400).json({ message: "Invalid specifications format" });
+      }
+    }
 
     if (!name || !description || !price) {
       return res.status(400).json({ message: "Required fields missing" });
@@ -125,14 +148,12 @@ exports.createProduct = async (req, res) => {
     let imageUrl = "";
     let imagePublicId = "";
 
-    if (!ALLOWED_MIME_TYPES.includes(req.file.mimetype)) {
-      return res.status(400).json({
-        message: "Invalid file type. Only JPG, PNG, WEBP allowed."
-      });
-    }
-
-
     if (req.file) {
+      if (!ALLOWED_MIME_TYPES.includes(req.file.mimetype)) {
+        return res.status(400).json({
+          message: "Invalid file type. Only JPG, PNG, WEBP allowed."
+        });
+      }
       const uploadResult = await uploadFromBuffer(req.file.buffer);
       imageUrl = uploadResult.secure_url;
       imagePublicId = uploadResult.public_id;
@@ -142,6 +163,8 @@ exports.createProduct = async (req, res) => {
       name,
       description,
       price,
+      discountPrice,
+      specifications: specs,
       imageUrl,
       imagePublicId,
       countInStock: countInStock || 0,

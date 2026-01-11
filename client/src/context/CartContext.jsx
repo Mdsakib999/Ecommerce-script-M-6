@@ -41,20 +41,21 @@ export default function CartProvider({ children }) {
 
     setCart((prev) => {
       const existingIndex = prev.findIndex((i) => i.productId === product._id);
+      const activePrice = product.discountPrice > 0 ? product.discountPrice : product.price;
 
       if (existingIndex >= 0) {
         // update existing item safely (cap by stock)
         return prev.map((item, idx) => {
           if (idx !== existingIndex) return item;
           const newQty = Math.min(item.qty + 1, product.countInStock ?? Infinity);
-          return { ...item, qty: newQty, countInStock: product.countInStock ?? item.countInStock };
+          return { ...item, price: activePrice, qty: newQty, countInStock: product.countInStock ?? item.countInStock };
         });
       } else {
         // add new item
         const newItem = {
           productId: product._id,
           name: product.name,
-          price: product.price,
+          price: activePrice,
           qty: 1,
           imageUrl: product.imageUrl,
           countInStock: product.countInStock ?? Infinity
