@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema(
         type: String,
       },
     },
+    phoneNumber: String,
+    district: String,
+    address: String,
 
     // ⭐ Admin role
     isAdmin: {

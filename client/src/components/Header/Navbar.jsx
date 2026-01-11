@@ -6,16 +6,17 @@ import {
   ShoppingCartIcon,
   UserCircleIcon,
   WrenchScrewdriverIcon,
-  XMarkIcon
+  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { useCart } from "../../context/CartContext";
 import { logout } from "../../firebase";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
-  const { cart } = useCart();
+  const { cart, openCart } = useCart();
   const { user } = useAuth();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,8 +32,8 @@ export default function Navbar() {
       setIsScrolled(window.scrollY > 10);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Close dropdown when clicking outside
@@ -43,29 +44,36 @@ export default function Navbar() {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target) && mobileMenuOpen) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        mobileMenuOpen
+      ) {
         setMobileMenuOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mobileMenuOpen]);
 
   return (
-    <header className={`sticky top-0 z-1000 border-b shadow-md transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white border-gray-200' 
-        : 'glass border-white/20'
-    }`}>
-      <nav ref={mobileMenuRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header
+      className={`sticky top-0 z-1000 border-b shadow-md transition-all duration-300 ${
+        isScrolled ? "bg-white border-gray-200" : "glass border-white/20"
+      }`}
+    >
+      <nav
+        ref={mobileMenuRef}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+      >
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
@@ -82,11 +90,11 @@ export default function Navbar() {
             <Link
               to="/"
               className={`text-gray-700 hover:text-cyan-600 transition-colors relative group ${
-                location.pathname === '/' ? 'text-cyan-600 font-semibold' : ''
+                location.pathname === "/" ? "text-cyan-600 font-semibold" : ""
               }`}
             >
               Home
-              {location.pathname === '/' && (
+              {location.pathname === "/" && (
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-accent transform scale-x-100 transition-transform origin-left"></span>
               )}
             </Link>
@@ -94,27 +102,36 @@ export default function Navbar() {
             <Link
               to="/products"
               className={`text-gray-700 hover:text-cyan-600 transition-colors relative group ${
-                location.pathname === '/products' ? 'text-cyan-600 font-semibold' : ''
+                location.pathname === "/products"
+                  ? "text-cyan-600 font-semibold"
+                  : ""
               }`}
             >
               Products
-              {location.pathname === '/products' && (
+              {location.pathname === "/products" && (
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-accent transform scale-x-100 transition-transform origin-left"></span>
               )}
             </Link>
           </div>
 
+          {/* Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-lg mx-8">
+            <SearchBar />
+          </div>
+
           {/* Right Side - Cart & Auth */}
           <div className="flex items-center gap-3">
             {/* Cart Link */}
-            <Link to="/cart" className="relative p-2 text-gray-700 hover:text-cyan-600 transition-colors">
+            <button onClick={openCart}
+              className="relative p-2 text-gray-700 hover:text-cyan-600 transition-colors"
+            >
               <ShoppingCartIcon className="w-6 h-6" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-secondary text-white text-xs font-bold rounded-full flex items-center justify-center animate-scale-in">
                   {cartCount}
                 </span>
               )}
-            </Link>
+            </button>
 
             {/* Auth Section */}
             {user ? (
@@ -127,7 +144,7 @@ export default function Navbar() {
                   {user.photoURL ? (
                     <img
                       src={user.photoURL}
-                      alt={user.displayName || 'User'}
+                      alt={user.displayName || "User"}
                       className="w-8 h-8 rounded-full border-2 border-cyan-500"
                     />
                   ) : (
@@ -136,11 +153,23 @@ export default function Navbar() {
                   <span className="text-sm font-medium text-gray-700">
                     {user.name}
                   </span>
-                  <ChevronDownIcon className={`w-4 h-4 text-gray-600 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDownIcon
+                    className={`w-4 h-4 text-gray-600 transition-transform ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </button>
 
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-1 animate-fade-in-down z-[1001]">
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setIsDropdownOpen(false)}
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 hover:text-cyan-700 transition-colors"
+                    >
+                      <UserCircleIcon className="w-4 h-4" />
+                      My Dashboard
+                    </Link>
                     {user?.isAdmin && (
                       <Link
                         to="/admin"
@@ -194,9 +223,9 @@ export default function Navbar() {
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === '/'
-                    ? 'bg-cyan-100 text-cyan-700'
-                    : 'text-gray-700 hover:bg-gray-100'
+                  location.pathname === "/"
+                    ? "bg-cyan-100 text-cyan-700"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
                 Home
@@ -206,18 +235,20 @@ export default function Navbar() {
                 to="/products"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === '/products'
-                    ? 'bg-cyan-100 text-cyan-700'
-                    : 'text-gray-700 hover:bg-gray-100'
+                  location.pathname === "/products"
+                    ? "bg-cyan-100 text-cyan-700"
+                    : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
                 Products
               </Link>
 
-              <Link
-                to="/cart"
-                onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 flex items-center justify-between"
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openCart();
+                }}
+                className="w-full px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 flex items-center justify-between"
               >
                 <span className="flex items-center gap-2">
                   <ShoppingCartIcon className="w-4 h-4" />
@@ -228,7 +259,7 @@ export default function Navbar() {
                     {cartCount}
                   </span>
                 )}
-              </Link>
+              </button>
 
               {!user && (
                 <>

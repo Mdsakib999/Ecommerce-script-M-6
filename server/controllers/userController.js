@@ -28,6 +28,27 @@ exports.syncUser = async (req, res) => {
   res.json(user);
 };
 
+// Update User Profile
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findOne({ firebaseUid: req.user.uid });
+
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.phoneNumber = req.body.phoneNumber || user.phoneNumber;
+      user.district = req.body.district || user.district;
+      user.address = req.body.address || user.address;
+
+      const updatedUser = await user.save();
+      res.json(updatedUser);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error', error: error.message });
+  }
+};
+
 // Toggle Ban Status (Admin only)
 exports.toggleBanStatus = async (req, res) => {
   try {

@@ -103,6 +103,17 @@ exports.getAllOrders = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+// GET /api/orders/my-orders - Get orders for logged-in user
+exports.getMyOrders = async (req, res) => {
+  try {
+    const userEmail = req.user.email;
+    const orders = await Order.find({ userEmail }).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
 exports.updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;

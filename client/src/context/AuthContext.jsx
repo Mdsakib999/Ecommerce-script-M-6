@@ -15,7 +15,7 @@ export default function AuthProvider({ children }) {
     try {
       const mytoken = await currentUser.getIdToken(true);
       setToken(mytoken);
-      
+
       const result = await api.post(
         "/api/users/sync",
         {},
@@ -34,11 +34,11 @@ export default function AuthProvider({ children }) {
       setUser(newUser);
     } catch (error) {
       if (error.response?.status === 403) {
-          await signOut(auth);
-          setUser(null);
-          setToken(null);
-          toast.error(error.response.data.message); // Notify user they are banned
-          return;
+        await signOut(auth);
+        setUser(null);
+        setToken(null);
+        toast.error(error.response.data.message); // Notify user they are banned
+        return;
       }
       console.error("Error syncing user:", error);
       // Only set partial user if unexpected error, NOT if banned
@@ -65,6 +65,14 @@ export default function AuthProvider({ children }) {
     }
   };
 
+  const updateProfile = async (data) => {
+    const response = await api.put("/api/users/profile", data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setUser((prev) => ({ ...prev, ...response.data }));
+    return response.data;
+  };
+
   // LOGOUT FUNCTION
   const logout = async () => {
     await signOut(auth);
@@ -73,7 +81,9 @@ export default function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout, token, refreshUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, logout, token, refreshUser, updateProfile }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );

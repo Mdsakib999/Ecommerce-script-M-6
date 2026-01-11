@@ -1,12 +1,15 @@
 const express = require('express');
 const verifyFirebaseToken = require('../middleware/AuthMiddleware');
-const { syncUser, uploadPhoto, getAllUsers, deleteUser, toggleBanStatus } = require('../controllers/userController.js');
+const { syncUser, uploadPhoto, getAllUsers, deleteUser, toggleBanStatus, updateUserProfile } = require('../controllers/userController.js');
 const upload = require('../middleware/uploadMiddleware');
 const isAdmin = require('../middleware/isAdmin');
 const router = express.Router();
 
 // Sync user after Firebase auth (for Google sign-in or after registration)
 router.post("/sync", verifyFirebaseToken, syncUser);
+
+// Update user profile
+router.put("/profile", verifyFirebaseToken, updateUserProfile);
 
 // Upload user profile photo (authenticated users only)
 router.post("/upload-photo", verifyFirebaseToken, upload.single('photo'), uploadPhoto);

@@ -14,7 +14,7 @@ export default function CategoryAdmin() {
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [formData, setFormData] = useState({ name: "", description: "" });
+  const [formData, setFormData] = useState({ name: "" });
   const { token } = useAuth();
 
   const fetchCategories = async () => {
@@ -85,14 +85,14 @@ export default function CategoryAdmin() {
 
   const handleEdit = (category) => {
     setEditingCategory(category);
-    setFormData({ name: category.name, description: category.description || "" });
+    setFormData({ name: category.name || "" });
     setShowForm(true);
   };
 
   const resetForm = () => {
     setShowForm(false);
     setEditingCategory(null);
-    setFormData({ name: "", description: "" });
+    setFormData({ name: ""});
   };
 
   if (loading) return <Loader fullPage />;
@@ -179,7 +179,7 @@ export default function CategoryAdmin() {
               required
               value={formData.name}
               onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
+                setFormData({ name: e.target.value })
               }
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />

@@ -1,48 +1,87 @@
 import {
     ArrowRightIcon,
     ShieldCheckIcon,
-    ShoppingBagIcon
-} from '@heroicons/react/24/outline';
-import { useMemo, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { toast } from 'sonner';
-import { placeOrder } from '../api/order';
-import CartItem from '../components/CartItem';
-import Button from '../components/ui/Button';
-import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext';
+    ShoppingBagIcon,
+} from "@heroicons/react/24/outline";
+import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import { placeOrder } from "../api/order";
+import CartItem from "../components/CartItem";
+import Button from "../components/ui/Button";
+import Input from "../components/ui/Input";
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 
 export default function CartPage() {
   const { cart, clearCart } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
 
-  const subtotal = useMemo(() => cart.reduce((s, i) => s + (i.price * i.qty), 0), [cart]);
+  const [shippingInfo, setShippingInfo] = useState({
+    phoneNumber: user?.phoneNumber || "",
+    district: user?.district || "",
+    address: user?.address || "",
+  });
+
+  // Update local state when user loads
+  useMemo(() => {
+    if (user) {
+      setShippingInfo((prev) => ({
+        phoneNumber: user.phoneNumber || prev.phoneNumber,
+        district: user.district || prev.district,
+        address: user.address || prev.address,
+      }));
+    }
+  }, [user]);
+
+  const subtotal = useMemo(
+    () => cart.reduce((s, i) => s + i.price * i.qty, 0),
+    [cart]
+  );
   const shipping = subtotal > 1000 ? 0 : 50; // Free shipping over ৳1000
   const total = subtotal + shipping;
 
   const handleCheckout = async () => {
-    if (cart.length === 0) return toast.error('Cart is empty');
-    if (!user) return toast.error('Please log in to checkout');
+    if (cart.length === 0) return toast.error("Cart is empty");
+    if (!user) return toast.error("Please log in to checkout");
 
-    const orderItems = cart.map(i => ({
+    if (
+      !shippingInfo.phoneNumber ||
+      !shippingInfo.district ||
+      !shippingInfo.address
+    ) {
+      return toast.error("Please fill in all shipping information");
+    }
+
+    const orderItems = cart.map((i) => ({
       productId: i.productId,
       name: i.name,
       qty: i.qty,
       price: i.price,
-      imageUrl: i.imageUrl
+      imageUrl: i.imageUrl,
     }));
 
     try {
       setLoading(true);
+
+      // Update profile if info changed
+      if (
+        user.phoneNumber !== shippingInfo.phoneNumber ||
+        user.district !== shippingInfo.district ||
+        user.address !== shippingInfo.address
+      ) {
+        await updateProfile(shippingInfo);
+      }
+
       const order = await placeOrder(orderItems);
-      toast.success('Order placed successfully!');
+      toast.success("Order placed successfully!");
       clearCart();
       navigate(`/order-success/${order._id}`);
     } catch (err) {
       console.error(err);
-      toast.error(err.response?.data?.message || 'Failed to place order');
+      toast.error(err.response?.data?.message || "Failed to place order");
     } finally {
       setLoading(false);
     }
@@ -53,9 +92,15 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Shopping Cart</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+            Shopping Cart
+          </h1>
           <p className="text-gray-600">
-            {cart.length === 0 ? 'Your cart is empty' : `${cart.length} item${cart.length !== 1 ? 's' : ''} in your cart`}
+            {cart.length === 0
+              ? "Your cart is empty"
+              : `${cart.length} item${
+                  cart.length !== 1 ? "s" : ""
+                } in your cart`}
           </p>
         </div>
 
@@ -70,7 +115,8 @@ export default function CartPage() {
                 Your cart is empty
               </h2>
               <p className="text-gray-600 mb-8">
-                Looks like you haven't added anything to your cart yet. Start shopping to fill it up!
+                Looks like you haven't added anything to your cart yet. Start
+                shopping to fill it up!
               </p>
               <Link to="/products">
                 <Button
@@ -85,28 +131,102 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
-              {cart.map(item => (
-                <div key={item.productId} className="bg-white rounded-xl shadow-sm overflow-hidden animate-fade-in">
-                  <CartItem item={item} />
+            {/* Main Content (Shipping + Items) */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Shipping Info Form */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <ShieldCheckIcon className="w-6 h-6 text-cyan-600" />
+                  Shipping Information
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input
+                    label="Phone Number"
+                    placeholder="e.g. 01700000000"
+                    value={shippingInfo.phoneNumber}
+                    onChange={(e) =>
+                      setShippingInfo({
+                        ...shippingInfo,
+                        phoneNumber: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      District
+                    </label>
+                    <select
+                      value={shippingInfo.district}
+                      onChange={(e) =>
+                        setShippingInfo({
+                          ...shippingInfo,
+                          district: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white"
+                      required
+                    >
+                      <option value="">Select District</option>
+                      <option value="Dhaka">Dhaka</option>
+                      <option value="Chattogram">Chattogram</option>
+                      <option value="Rajshahi">Rajshahi</option>
+                      <option value="Khulna">Khulna</option>
+                      <option value="Barishal">Barishal</option>
+                      <option value="Sylhet">Sylhet</option>
+                      <option value="Rangpur">Rangpur</option>
+                      <option value="Mymensingh">Mymensingh</option>
+                    </select>
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Full Address
+                    </label>
+                    <textarea
+                      value={shippingInfo.address}
+                      onChange={(e) =>
+                        setShippingInfo({
+                          ...shippingInfo,
+                          address: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                      rows={2}
+                      placeholder="e.g. House 12, Road 5, Dhanmondi"
+                      required
+                    />
+                  </div>
                 </div>
-              ))}
+              </div>
 
-              {/* Clear Cart Button */}
-              <Button
-                onClick={clearCart}
-                variant="ghost"
-                className="w-auto ml-auto text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-300 hover:border-red-400"
-              >
-                Clear Cart
-              </Button>
+              {/* Cart Items */}
+              <div className="space-y-4">
+                {cart.map((item) => (
+                  <div
+                    key={item.productId}
+                    className="bg-white rounded-xl shadow-sm overflow-hidden animate-fade-in"
+                  >
+                    <CartItem item={item} />
+                  </div>
+                ))}
+
+                {/* Clear Cart Button */}
+                <Button
+                  onClick={clearCart}
+                  variant="ghost"
+                  className="w-auto ml-auto text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-300 hover:border-red-400"
+                >
+                  Clear Cart
+                </Button>
+              </div>
             </div>
 
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-2xl shadow-lg p-6 lg:sticky lg:top-24 space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900">Order Summary</h2>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Order Summary
+                </h2>
                 {/* Price Breakdown */}
                 <div className="space-y-3 py-4 border-y border-gray-200">
                   <div className="flex justify-between text-gray-600">
@@ -115,21 +235,30 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Shipping</span>
-                    <span className={shipping === 0 ? 'text-green-600 font-medium' : ''}>
-                      {shipping === 0 ? 'FREE' : `৳${shipping.toFixed(2)}`}
+                    <span
+                      className={
+                        shipping === 0 ? "text-green-600 font-medium" : ""
+                      }
+                    >
+                      {shipping === 0 ? "FREE" : `৳${shipping.toFixed(2)}`}
                     </span>
                   </div>
                   {shipping > 0 && (
                     <p className="text-xs text-gray-500">
-                      Add ৳{(1000 - subtotal).toFixed(2)} more for free shipping!
+                      Add ৳{(1000 - subtotal).toFixed(2)} more for free
+                      shipping!
                     </p>
                   )}
                 </div>
 
                 {/* Total */}
                 <div className="flex justify-between items-baseline">
-                  <span className="text-lg font-semibold text-gray-900">Total</span>
-                  <span className="text-3xl font-bold text-gray-900">৳{total.toFixed(2)}</span>
+                  <span className="text-lg font-semibold text-gray-900">
+                    Total
+                  </span>
+                  <span className="text-3xl font-bold text-gray-900">
+                    ৳{total.toFixed(2)}
+                  </span>
                 </div>
 
                 {/* Checkout Button */}
@@ -142,7 +271,7 @@ export default function CartPage() {
                   className="w-full"
                   rightIcon={<ArrowRightIcon className="w-5 h-5" />}
                 >
-                  {!user ? 'Login to Checkout' : 'Proceed to Checkout'}
+                  {!user ? "Login to Checkout" : "Proceed to Checkout"}
                 </Button>
 
                 {/* Secure Checkout Badge */}
@@ -153,11 +282,7 @@ export default function CartPage() {
 
                 {/* Continue Shopping */}
                 <Link to="/products">
-                  <Button
-                    variant="ghost"
-                    size="md"
-                    className="w-full"
-                  >
+                  <Button variant="ghost" size="md" className="w-full">
                     Continue Shopping
                   </Button>
                 </Link>

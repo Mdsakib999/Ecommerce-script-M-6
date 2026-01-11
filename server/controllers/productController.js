@@ -10,7 +10,44 @@ const ALLOWED_MIME_TYPES = [
 // Get all products
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    // Keyword search filter
+    const keyword = req.query.keyword
+      ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+      : {};
+
+    // Category filter
+    const categoryFilter = req.query.category && req.query.category !== 'all'
+      ? { category: req.query.category }
+      : {};
+
+    // Combine filters
+    const filters = { ...keyword, ...categoryFilter };
+
+    // Build sort object
+    let sortOptions = {};
+    switch (req.query.sort) {
+      case 'price-asc':
+        sortOptions = { price: 1 };
+        break;
+      case 'price-desc':
+        sortOptions = { price: -1 };
+        break;
+      case 'name-asc':
+        sortOptions = { name: 1 };
+        break;
+      case 'name-desc':
+        sortOptions = { name: -1 };
+        break;
+      default:
+        sortOptions = { createdAt: -1 }; // Default: newest first
+    }
+
+    const products = await Product.find(filters).sort(sortOptions);
     res.json(products);
   } catch (error) {
     console.error(error);

@@ -1,5 +1,5 @@
 // src/context/CartContext.js
-import React, { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext();
 const STORAGE_KEY = "cart";
@@ -17,6 +17,11 @@ const loadCart = () => {
 
 export default function CartProvider({ children }) {
   const [cart, setCart] = useState(() => loadCart());
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+  const toggleCart = () => setIsCartOpen((prev) => !prev);
 
   // persist cart whenever it changes
   useEffect(() => {
@@ -84,7 +89,18 @@ export default function CartProvider({ children }) {
   const clearCart = () => setCart([]);
 
   return (
-    <CartContext.Provider value={{ cart, setCart, addToCart, updateQty, removeFromCart, clearCart }}>
+    <CartContext.Provider value={{ 
+      cart, 
+      setCart, 
+      isCartOpen, 
+      openCart, 
+      closeCart, 
+      toggleCart, 
+      addToCart, 
+      updateQty, 
+      removeFromCart, 
+      clearCart 
+    }}>
       {children}
     </CartContext.Provider>
   );
