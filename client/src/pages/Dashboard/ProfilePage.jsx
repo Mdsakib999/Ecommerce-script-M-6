@@ -42,11 +42,18 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-        <Button onClick={handleEditClick} leftIcon={<PencilIcon className="w-4 h-4" />}>
-          Edit Profile
+    <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">
+          My Profile
+        </h1>
+        <Button 
+          onClick={handleEditClick} 
+          leftIcon={<PencilIcon className="w-4 h-4" />}
+          className="flex-shrink-0 px-3 sm:px-4 py-2 text-xs sm:text-sm"
+        >
+          <span className="hidden xs:inline ml-1">Edit Profile</span>
+          <span className="xs:hidden">Edit</span>
         </Button>
       </div>
 

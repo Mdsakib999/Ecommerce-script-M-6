@@ -47,8 +47,8 @@ export default function MyOrdersPage() {
   if (error) return <Message type="error">{error}</Message>;
 
   return (
-    <div className="max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">My Orders</h1>
+    <div className="max-w-7xl mx-auto space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Orders</h1>
 
       {orders.length === 0 ? (
         <Message>You haven't placed any orders yet.</Message>

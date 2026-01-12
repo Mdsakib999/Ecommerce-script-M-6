@@ -8,18 +8,26 @@ function DashboardSidebar() {
         <li>
           <NavLink 
             to="/dashboard/profile" 
-            className="flex items-center px-3 py-2 rounded-md hover:bg-gray-700"
+            className={({ isActive }) => 
+              `flex items-center px-3 py-2 rounded-md transition-colors ${
+                isActive ? "bg-cyan-600 text-white shadow-lg" : "text-gray-300 hover:bg-gray-700 hover:text-white"
+              }`
+            }
           >
-            <UserCircleIcon className="w-5 h-5 mr-2 text-gray-300" />
+            <UserCircleIcon className="w-5 h-5 mr-2" />
             Profile
           </NavLink>
         </li>
         <li>
           <NavLink 
             to="/dashboard/orders"
-            className="flex items-center px-3 py-2 rounded-md hover:bg-gray-700"
+            className={({ isActive }) => 
+              `flex items-center px-3 py-2 rounded-md transition-colors ${
+                isActive ? "bg-cyan-600 text-white shadow-lg" : "text-gray-300 hover:bg-gray-700 hover:text-white"
+              }`
+            }
           >
-            <ShoppingBagIcon className="w-5 h-5 mr-2 text-gray-300" />
+            <ShoppingBagIcon className="w-5 h-5 mr-2" />
             My Orders
           </NavLink>
         </li>
