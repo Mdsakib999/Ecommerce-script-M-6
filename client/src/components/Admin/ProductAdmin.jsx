@@ -23,9 +23,10 @@ export default function ProductAdmin() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get("/api/products");
+        // Request a large limit for admin panel to show 'all' products until admin pagination is implemented
+        const { data } = await api.get("/api/products?limit=1000");
         if (!mounted) return;
-        setProducts(data);
+        setProducts(data.products || []);
       } catch (err) {
         console.error(err);
         setError(

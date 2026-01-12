@@ -20,7 +20,7 @@ export default function SearchBar() {
       try {
         setLoading(true);
         const { data } = await api.get(`/api/products?keyword=${query}`);
-        setProducts(data);
+        setProducts(data.products || []);
       } catch (error) {
         console.error(error);
       } finally {

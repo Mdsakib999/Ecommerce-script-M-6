@@ -36,7 +36,8 @@ export default function Home() {
     const fetchProducts = async () => {
       try {
         const { data } = await api.get("/api/products");
-        setProducts(data);
+        // API now returns { products: [], pagination: {} }
+        setProducts(data.products || []);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {

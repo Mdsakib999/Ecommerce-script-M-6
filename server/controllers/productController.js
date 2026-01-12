@@ -10,6 +10,11 @@ const ALLOWED_MIME_TYPES = [
 // Get all products
 exports.getProducts = async (req, res) => {
   try {
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 12; // 12 products per page
+    const skip = (page - 1) * limit;
+
     // Keyword search filter
     const keyword = req.query.keyword
       ? {
@@ -47,8 +52,28 @@ exports.getProducts = async (req, res) => {
         sortOptions = { createdAt: -1 }; // Default: newest first
     }
 
-    const products = await Product.find(filters).sort(sortOptions);
-    res.json(products);
+    // Execute query with pagination
+    const products = await Product.find(filters)
+      .sort(sortOptions)
+      .limit(limit)
+      .skip(skip);
+
+    // Get total count for pagination info
+    const totalProducts = await Product.countDocuments(filters);
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    // Return paginated response
+    res.json({
+      products,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalProducts,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+        limit
+      }
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });

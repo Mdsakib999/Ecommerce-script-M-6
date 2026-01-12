@@ -1,8 +1,8 @@
 import {
-  ClipboardDocumentListIcon,
-  Squares2X2Icon,
-  TagIcon,
-  UsersIcon,
+    ClipboardDocumentListIcon,
+    Squares2X2Icon,
+    TagIcon,
+    UsersIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
@@ -33,7 +33,7 @@ export default function AdminHome() {
         ]);
 
         setStats({
-          products: prodRes.data.length || 0,
+          products: prodRes.data.pagination?.totalProducts || 0,
           categories: catRes.data.length || 0,
           orders: orderRes.data.length || 0,
           users: userRes.data.length || 0,

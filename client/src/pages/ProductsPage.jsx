@@ -8,6 +8,14 @@ import { useCart } from "../context/CartContext";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalProducts: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+    limit: 12
+  });
   const [categories, setCategories] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true); // First load
   const [filterLoading, setFilterLoading] = useState(false); // Filter changes
@@ -20,6 +28,7 @@ const ProductsPage = () => {
   const keyword = queryParams.get("keyword") || "";
   const currentSort = queryParams.get("sort") || "";
   const currentCategory = queryParams.get("category") || "all";
+  const currentPage = parseInt(queryParams.get("page")) || 1;
 
   // Fetch categories on mount
   useEffect(() => {
@@ -53,12 +62,15 @@ const ProductsPage = () => {
         if (currentCategory && currentCategory !== "all") {
           params.append("category", currentCategory);
         }
+        params.append("page", currentPage);
+        params.append("limit", 12);
 
         const url = `/api/products${params.toString() ? `?${params.toString()}` : ""}`;
         const { data } = await api.get(url);
 
         if (!mounted) return;
-        setProducts(data);
+        setProducts(data.products);
+        setPagination(data.pagination);
         setError(null);
       } catch (err) {
         console.error(err);
@@ -78,7 +90,7 @@ const ProductsPage = () => {
     return () => {
       mounted = false;
     };
-  }, [keyword, currentSort, currentCategory]);
+  }, [keyword, currentSort, currentCategory, currentPage]);
 
   const handleSortChange = (e) => {
     const newParams = new URLSearchParams(location.search);
@@ -87,6 +99,7 @@ const ProductsPage = () => {
     } else {
       newParams.delete("sort");
     }
+    newParams.delete("page"); // Reset to page 1
     navigate(`?${newParams.toString()}`, { replace: true });
   };
 
@@ -97,7 +110,17 @@ const ProductsPage = () => {
     } else {
       newParams.set("category", categoryName);
     }
+    newParams.delete("page"); // Reset to page 1
     navigate(`?${newParams.toString()}`, { replace: true });
+  };
+
+  const handlePageChange = (newPage) => {
+    const newParams = new URLSearchParams(location.search);
+    newParams.set("page", newPage);
+    navigate(`?${newParams.toString()}`, { replace: true });
+    
+    // Scroll to top of page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   if (initialLoading) return <Loader fullPage />;
@@ -137,7 +160,7 @@ const ProductsPage = () => {
               </select>
             </div>
             <div className="text-sm text-gray-600">
-              {products.length} {products.length === 1 ? "product" : "products"} found
+              Showing {products.length} of {pagination.totalProducts} products
             </div>
           </div>
 
@@ -181,7 +204,7 @@ const ProductsPage = () => {
         {/* Products Grid with Loading Overlay */}
         <div className="relative">
           {filterLoading && (
-            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-10 rounded-xl">
+            <div className="absolute inset-0 bg-white/60 backdrop-blur-sm flex items-center justify-center z-20 rounded-xl">
               <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-lg shadow-lg">
                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-cyan-600"></div>
                 <span className="text-gray-700 font-medium">Loading...</span>
@@ -199,6 +222,63 @@ const ProductsPage = () => {
               />
             ))}
           </div>
+
+          {/* Pagination Controls */}
+          {pagination.totalPages > 1 && (
+            <div className="mt-12 flex items-center justify-center gap-2">
+              {/* Previous Button */}
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={!pagination.hasPrevPage || filterLoading}
+                className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Previous
+              </button>
+
+              {/* Page Numbers */}
+              <div className="flex gap-2">
+                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((pageNum) => {
+                  // Show first page, last page, current page, and pages around current
+                  const showPage =
+                    pageNum === 1 ||
+                    pageNum === pagination.totalPages ||
+                    Math.abs(pageNum - currentPage) <= 1;
+
+                  if (!showPage && pageNum === 2) {
+                    return <span key={pageNum} className="px-2 text-gray-400">...</span>;
+                  }
+                  if (!showPage && pageNum === pagination.totalPages - 1) {
+                    return <span key={pageNum} className="px-2 text-gray-400">...</span>;
+                  }
+                  if (!showPage) return null;
+
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => handlePageChange(pageNum)}
+                      disabled={filterLoading}
+                      className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                        currentPage === pageNum
+                          ? "bg-cyan-600 text-white"
+                          : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                      } disabled:opacity-50`}
+                    >
+                      {pageNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next Button */}
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={!pagination.hasNextPage || filterLoading}
+                className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 font-medium hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
