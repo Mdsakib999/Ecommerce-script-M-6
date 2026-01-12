@@ -1,12 +1,12 @@
 import {
-  ArrowRightOnRectangleIcon,
-  Bars3Icon,
-  ChevronDownIcon,
-  ShoppingBagIcon,
-  ShoppingCartIcon,
-  UserCircleIcon,
-  WrenchScrewdriverIcon,
-  XMarkIcon,
+    ArrowRightOnRectangleIcon,
+    Bars3Icon,
+    ChevronDownIcon,
+    ShoppingBagIcon,
+    ShoppingCartIcon,
+    UserCircleIcon,
+    WrenchScrewdriverIcon,
+    XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
@@ -147,6 +147,7 @@ export default function Navbar() {
                       src={user.photoURL}
                       alt={user.displayName || "User"}
                       className="w-8 h-8 rounded-full border-2 border-cyan-500"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
                     <UserCircleIcon className="w-8 h-8 text-gray-600" />

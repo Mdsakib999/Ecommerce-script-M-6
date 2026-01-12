@@ -13,6 +13,8 @@ async function verifyFirebaseToken(req, res, next) {
             uid: decoded.uid,
             email: decoded.email,
             picture: decoded.picture,
+            name: decoded.name,
+            provider: decoded.firebase.sign_in_provider,
         };
         next();
     } catch (error) {

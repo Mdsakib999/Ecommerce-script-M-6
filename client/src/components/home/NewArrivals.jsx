@@ -28,7 +28,7 @@ const NewArrivals = ({ products }) => {
           {newArrivals.map((product, index) => (
             <div 
               key={product._id} 
-              className="animate-fade-in-up"
+              className="animate-fade-in-up flex flex-col"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <ProductCard product={product} />

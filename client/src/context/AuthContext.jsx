@@ -33,15 +33,15 @@ export default function AuthProvider({ children }) {
       };
       setUser(newUser);
     } catch (error) {
-      if (error.response?.status === 403) {
+      if (error.response?.status === 403 || error.response?.status === 404) {
         await signOut(auth);
         setUser(null);
         setToken(null);
-        toast.error(error.response.data.message); // Notify user they are banned
+        toast.error(error.response.data.message || "Authentication failed");
         return;
       }
       console.error("Error syncing user:", error);
-      // Only set partial user if unexpected error, NOT if banned
+      // Only set partial user if unexpected error, NOT if banned/missing
       setUser(currentUser);
     }
   };

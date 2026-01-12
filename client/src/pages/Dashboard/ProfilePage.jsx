@@ -57,6 +57,7 @@ export default function ProfilePage() {
               src={user.photoURL}
               alt={user.name}
               className="w-24 h-24 rounded-full border-4 border-cyan-500"
+              referrerPolicy="no-referrer"
             />
           ) : (
             <UserCircleIcon className="w-24 h-24 text-gray-400" />

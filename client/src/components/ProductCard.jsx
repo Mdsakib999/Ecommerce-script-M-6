@@ -28,8 +28,8 @@ const ProductCard = ({ product }) => {
   const isLowStock = product.countInStock > 0 && product.countInStock <= 5;
 
   return (
-    <div className="group w-full bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
-      <Link to={`/products/${product._id}`} className="relative">
+    <div className="group w-full h-full bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
+      <Link to={`/products/${product._id}`} className="relative flex flex-col grow">
         {/* Stock Status & Sale Badge */}
         <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
           {product.discountPrice > 0 && (
@@ -50,12 +50,12 @@ const ProductCard = ({ product }) => {
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="w-full h-full object-contain p-4 transform group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
           />
         </div>
 
         {/* Product Info */}
-        <div className="p-4">
+        <div className="p-4 flex flex-col grow">
           <h3 className="text-lg font-semibold text-gray-900 line-clamp-1 mb-2 group-hover:text-cyan-600 transition-colors">
             {product.name}
           </h3>

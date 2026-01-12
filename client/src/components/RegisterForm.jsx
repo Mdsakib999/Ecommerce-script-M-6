@@ -58,7 +58,7 @@ export default function RegisterForm() {
 
       // Step 2: Sync user with MongoDB (create user record)
       await api.post('/api/users/sync', 
-        { name: name }, // Send name in body
+        { name: name, isRegistering: true }, // Send name and registration flag
         {
           headers: {
             'Authorization': `Bearer ${token}`

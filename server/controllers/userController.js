@@ -1,8 +1,10 @@
 const User = require('../models/User');
 const uploadUserPhoto = require('../utils/uploadUserPhoto');
 const cloudinary = require('../config/cloudinary');
+const admin = require('../config/firebaseAdmin');
 exports.syncUser = async (req, res) => {
-  const { uid, email, picture } = req.user;
+  const { uid, email, picture, provider } = req.user;
+  const { isRegistering } = req.body;
   const name = req.body.name || req.user.name; // Prioritize body name (manual), then token name (google)
 
   let user = await User.findOne({ firebaseUid: uid });
@@ -12,13 +14,19 @@ exports.syncUser = async (req, res) => {
   }
 
   if (!user) {
-    user = await User.create({
-      firebaseUid: uid,
-      email,
-      name: name || email.split("@")[0],
-      googlePhotoUrl: picture,
-      isAdmin: false, // default
-    });
+    // Only allow creation if it's a social login (Google, etc.) OR if explicitly registering
+    if (provider !== 'password' || isRegistering) {
+      user = await User.create({
+        firebaseUid: uid,
+        email,
+        name: name || email.split("@")[0],
+        googlePhotoUrl: picture,
+        isAdmin: false, // default
+      });
+    } else {
+      // Manual login but user doesn't exist in MongoDB
+      return res.status(404).json({ message: "User not found in database. Did you forget to register?" });
+    }
   } else if (picture && user.googlePhotoUrl !== picture) {
     // Update google photo if changed
     user.googlePhotoUrl = picture;
@@ -151,10 +159,18 @@ exports.deleteUser = async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    // Delete from Firebase Auth
+    try {
+      await admin.auth().deleteUser(user.firebaseUid);
+    } catch (firebaseError) {
+      console.error('Firebase user deletion error:', firebaseError.message);
+      // Proceed even if Firebase user is already gone
+    }
+
     await user.deleteOne();
-    res.json({ message: 'User removed' });
+    res.json({ message: 'User removed from database and Firebase Auth' });
   } catch (error) {
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', error: error.message });
   }
 };
 
