@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import studioImage from '../../assets/brand-story.png';
+import studioImage from '../../assets/brand-story-2.jpg';
 import Button from '../ui/Button';
 
 const BrandStory = () => {

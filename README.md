@@ -352,12 +352,6 @@ When updating or deleting products, the backend automatically calls Cloudinary's
 
 ---
 
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
 ## Appendices
 
 ### Useful Commands
