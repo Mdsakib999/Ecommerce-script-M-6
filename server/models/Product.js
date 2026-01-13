@@ -15,16 +15,9 @@ const productSchema = new mongoose.Schema(
                 value: { type: String }
             }
         ],
-        reviews: [
-            {
-                name: { type: String },
-                rating: { type: Number },
-                comment: { type: String },
-                date: { type: Date, default: Date.now }
-            }
-        ],
+        isFeatured: {type : Boolean, default: false},
         rating: { type: Number, default: 0 },
-        numReviews: { type: Number, default: 0 }
+        rating: { type: Number, default: 0 }
     },
     { timestamps: true }
 );

@@ -1,12 +1,12 @@
 import {
-  MinusIcon,
-  PhotoIcon,
-  PlusIcon,
-  TagIcon,
-  FolderIcon,
-  CurrencyDollarIcon,
-  CubeIcon,
-  DocumentTextIcon,
+    CubeIcon,
+    CurrencyDollarIcon,
+    DocumentTextIcon,
+    FolderIcon,
+    MinusIcon,
+    PhotoIcon,
+    PlusIcon,
+    TagIcon,
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import api from "../../api/axios";

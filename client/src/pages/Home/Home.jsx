@@ -2,12 +2,12 @@ import { Autoplay, EffectFade } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import {
-    ArrowPathIcon,
-    ArrowRightIcon,
-    PhoneIcon,
-    ShieldCheckIcon,
-    SparklesIcon,
-    TruckIcon
+  ArrowPathIcon,
+  ArrowRightIcon,
+  PhoneIcon,
+  ShieldCheckIcon,
+  SparklesIcon,
+  TruckIcon
 } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
@@ -48,7 +48,7 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const featuredProducts = products.slice(0, 4);
+  const featuredProducts = products.filter(product => product.isFeatured).slice(0, 4);
 
   if (loading) return <Loader />;
 

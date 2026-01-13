@@ -12,7 +12,7 @@ exports.getProducts = async (req, res) => {
   try {
     // Pagination parameters
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 12; // 12 products per page
+    const limit = parseInt(req.query.limit) || 1000; // 12 products per page
     const skip = (page - 1) * limit;
 
     // Keyword search filter
@@ -153,7 +153,7 @@ exports.deleteProduct = async (req, res) => {
 // Create new product
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, price, discountPrice, countInStock, category, specifications } = req.body;
+    const { name, description, price, discountPrice, countInStock, category, specifications, isFeatured } = req.body;
 
     // Parse specifications if sent as string
     let specs = [];
@@ -194,6 +194,7 @@ exports.createProduct = async (req, res) => {
       imagePublicId,
       countInStock: countInStock || 0,
       category: category || "",
+      isFeatured,
     });
     const createdProduct = await product.save();
     res.status(201).json(createdProduct);

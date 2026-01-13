@@ -1,10 +1,10 @@
 import {
-  CheckCircleIcon,
-  HomeIcon,
-  MinusIcon,
-  PlusIcon,
-  ShoppingCartIcon,
-  StarIcon,
+    CheckCircleIcon,
+    HomeIcon,
+    MinusIcon,
+    PlusIcon,
+    ShoppingCartIcon,
+    StarIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as StarIconSolid } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
@@ -333,9 +333,7 @@ const ProductDetailsPage = () => {
                 <p className="text-gray-700 leading-relaxed text-lg">
                   {product.description}
                 </p>
-                <d
-                
-                iv className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex items-start gap-3 p-4 bg-purple-50 rounded-xl">
                     <CheckCircleIcon className="w-6 h-6 text-purple-600 flex-shrink-0" />
                     <div>
@@ -358,7 +356,7 @@ const ProductDetailsPage = () => {
                       </p>
                     </div>
                   </div>
-                </d>
+                </div>
               </div>
             )}
 
@@ -415,7 +413,7 @@ const ProductDetailsPage = () => {
                       </div>
                       <p className="text-gray-500 text-sm">
                         Based on{" "}
-                        {product.numReviews > 0 ? product.numReviews : "128"}{" "}
+                        {product.reviews?.length > 0 ? product.reviews.length : "128"}{" "}
                         reviews
                       </p>
                     </div>

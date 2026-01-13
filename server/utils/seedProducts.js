@@ -25,7 +25,7 @@ const newProducts = [
         category: "Beauty",
         specifications: [{ key: "Size", value: "30ml" }, { key: "Type", value: "Vegan" }],
         rating: 4.7,
-        numReviews: 88
+
     },
     {
         name: "Matte Lipstick Set",
@@ -37,7 +37,7 @@ const newProducts = [
         category: "Beauty",
         specifications: [{ key: "Finish", value: "Matte" }, { key: "Shades", value: "5 Colors" }],
         rating: 4.5,
-        numReviews: 120
+
     },
     {
         name: "Mineral Sunscreen SPF 50",
@@ -48,7 +48,7 @@ const newProducts = [
         category: "Beauty",
         specifications: [{ key: "SPF", value: "50" }, { key: "Weight", value: "50g" }],
         rating: 4.8,
-        numReviews: 56
+
     },
     {
         name: "Organic Argan Hair Oil",
@@ -59,7 +59,7 @@ const newProducts = [
         category: "Beauty",
         specifications: [{ key: "Volume", value: "100ml" }, { key: "Ingredient", value: "Argan Oil" }],
         rating: 4.9,
-        numReviews: 42
+
     },
 
     // --- Books (4) ---
@@ -72,7 +72,7 @@ const newProducts = [
         category: "Books",
         specifications: [{ key: "Author", value: "James Clear" }, { key: "Format", value: "Hardcover" }],
         rating: 4.9,
-        numReviews: 500
+
     },
     {
         name: "The Great Gatsby",
@@ -83,7 +83,7 @@ const newProducts = [
         category: "Books",
         specifications: [{ key: "Author", value: "F. Scott Fitzgerald" }, { key: "Genre", value: "Classic" }],
         rating: 4.4,
-        numReviews: 85
+
     },
     {
         name: "Sapiens: A Brief History of Humankind",
@@ -95,7 +95,7 @@ const newProducts = [
         category: "Books",
         specifications: [{ key: "Author", value: "Yuval Noah Harari" }, { key: "Pages", value: "443" }],
         rating: 4.7,
-        numReviews: 320
+
     },
     {
         name: "Thinking, Fast and Slow",
@@ -106,7 +106,7 @@ const newProducts = [
         category: "Books",
         specifications: [{ key: "Author", value: "Daniel Kahneman" }, { key: "Topic", value: "Psychology" }],
         rating: 4.6,
-        numReviews: 145
+
     },
 
     // --- Toys (4) ---
@@ -119,7 +119,7 @@ const newProducts = [
         category: "Toys",
         specifications: [{ key: "Pieces", value: "1351" }, { key: "Age", value: "9+" }],
         rating: 4.9,
-        numReviews: 75
+
     },
     {
         name: "Remote Control Stunt Car",
@@ -131,7 +131,7 @@ const newProducts = [
         category: "Toys",
         specifications: [{ key: "Drive", value: "4WD" }, { key: "Battery", value: "Rechargeable" }],
         rating: 4.3,
-        numReviews: 58
+
     },
     {
         name: "Wooden Train Set",
@@ -142,7 +142,7 @@ const newProducts = [
         category: "Toys",
         specifications: [{ key: "Material", value: "Beech Wood" }, { key: "Pieces", value: "50" }],
         rating: 4.6,
-        numReviews: 28
+
     },
     {
         name: "Interactive Robot Toy",
@@ -153,7 +153,7 @@ const newProducts = [
         category: "Toys",
         specifications: [{ key: "Features", value: "Gesture Control" }, { key: "Type", value: "Smart Toy" }],
         rating: 4.5,
-        numReviews: 40
+
     },
 
     // --- Sports (4) ---
@@ -166,7 +166,7 @@ const newProducts = [
         category: "Sports",
         specifications: [{ key: "Thickness", value: "6mm" }, { key: "Material", value: "TPE" }],
         rating: 4.8,
-        numReviews: 110
+
     },
     {
         name: "Adjustable Dumbbell Pair",
@@ -178,7 +178,7 @@ const newProducts = [
         category: "Sports",
         specifications: [{ key: "Max Weight", value: "24kg" }, { key: "Sold as", value: "Pair" }],
         rating: 4.7,
-        numReviews: 25
+
     },
     {
         name: "Portable Basketball Hoop",
@@ -189,7 +189,7 @@ const newProducts = [
         category: "Sports",
         specifications: [{ key: "Adjustable", value: "2.3m to 3.05m" }, { key: "Usage", value: "Outdoor" }],
         rating: 4.4,
-        numReviews: 15
+
     },
     {
         name: "Soccer Ball Size 5",
@@ -200,7 +200,7 @@ const newProducts = [
         category: "Sports",
         specifications: [{ key: "Size", value: "5" }, { key: "Construction", value: "Machine-stitched" }],
         rating: 4.5,
-        numReviews: 210
+
     },
 
     // --- Automotive (4) ---
@@ -213,7 +213,7 @@ const newProducts = [
         category: "Automotive",
         specifications: [{ key: "Max Pressure", value: "150 PSI" }, { key: "Power", value: "12V DC" }],
         rating: 4.6,
-        numReviews: 95
+
     },
     {
         name: "Dash Cam 4K",
@@ -225,7 +225,7 @@ const newProducts = [
         category: "Automotive",
         specifications: [{ key: "Resolution", value: "4K Ultra HD" }, { key: "Lens", value: "170° Wide Angle" }],
         rating: 4.8,
-        numReviews: 130
+
     },
     {
         name: "Microfiber Cleaning Cloths (12-pack)",
@@ -236,7 +236,7 @@ const newProducts = [
         category: "Automotive",
         specifications: [{ key: "Quantity", value: "12 Pack" }, { key: "Material", value: "Microfiber" }],
         rating: 4.9,
-        numReviews: 450
+
     },
     {
         name: "Car Vacuum Cleaner",
@@ -247,7 +247,7 @@ const newProducts = [
         category: "Automotive",
         specifications: [{ key: "Suction", value: "5000Pa" }, { key: "Filter", value: "HEPA" }],
         rating: 4.2,
-        numReviews: 78
+
     }
 ];
 
