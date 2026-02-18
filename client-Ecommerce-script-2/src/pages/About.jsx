@@ -1,6 +1,6 @@
 import banner from "../assets/about-banner.jpg";
-import Countup from "../components/shared/Countup";
 import AboutSection from "../components/shared/AboutSection";
+import Countup from "../components/shared/Countup";
 export default function About() {
   return (
     <div className="">
@@ -11,7 +11,7 @@ export default function About() {
         <div className="absolute inset-0 bg-black opacity-60"></div>
         <div className="z-10 flex items-center flex-col gap-4 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl text-white capitalize">
-            About for Notevia
+            About Notevia
           </h1>
           <p className="tracking-widest">WE CAN DO MORE FOR YOU</p>
         </div>
@@ -58,16 +58,16 @@ export default function About() {
         </div>
       </div>
       <AboutSection
-        preheading="OUR HISTORY"
-        heading="Creative and renovate fashion trends"
-        normaltext="Collaboratively administrate empowered markets via plug-and-play maintain networks. Dynamically usable procrastinate B2B users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI."
+        preheading="OUR MISSION"
+        heading="Empowering Your Workspace"
+        normaltext="We believe that the right tools inspire great work. Whether you are a student, a professional, or a creative artist, Notevia provides the essential supplies that help you organize your thoughts and bring your ideas to life. From premium pens to ergonomic desk accessories, we curate everything you need for a productive environment."
         image="https://i.ibb.co.com/trJvsqh/pexels-karolina-grabowska-5650016.jpg"
         reverse={false}
       />
       <AboutSection
-        preheading="Our vision"
-        heading="We are marketpress"
-        normaltext="Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI."
+        preheading="OUR VISION"
+        heading="Quality in Every Detail"
+        normaltext="Our vision is to become the leading provider of high-quality stationary and office solutions in the region. We are dedicated to sustainability, innovation, and customer satisfaction, ensuring that every product we offer meets the highest standards of excellence and durability."
         image="https://i.ibb.co.com/tMBVZ117/pexels-karolina-grabowska-5632398.jpg"
         reverse={true}
       />

@@ -29,13 +29,13 @@ router.get("/google", (req, res, next) => __awaiter(void 0, void 0, void 0, func
     })(req, res, next);
 }));
 router.get("/google/callback", (req, res, next) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     passport_1.default.authenticate("google", (err, user, info) => {
         if (err) {
-            return res.redirect(`${envConfig_1.envVariables.FRONTEND_URL}/login?error=Something went wrong`);
+            return res.redirect(`${envConfig_1.envVariables.NOTEVIA_URL}/login?error=Something went wrong`);
         }
         if (!user) {
-            return res.redirect(`${envConfig_1.envVariables.FRONTEND_URL}/login?error=${encodeURIComponent((info === null || info === void 0 ? void 0 : info.message) || "Cannot login")}`);
+            return res.redirect(`${envConfig_1.envVariables.NOTEVIA_URL}/login?error=${encodeURIComponent((info === null || info === void 0 ? void 0 : info.message) || "Cannot login")}`);
         }
         req.user = user;
         return auth_controller_1.AuthController.googleCallbackController(req, res, next);

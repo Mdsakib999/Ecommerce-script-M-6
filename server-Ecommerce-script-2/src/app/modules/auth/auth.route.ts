@@ -1,7 +1,7 @@
-import passport from "passport";
 import { NextFunction, Request, Response, Router } from "express";
-import { AuthController } from "./auth.controller";
+import passport from "passport";
 import { envVariables } from "../../config/envConfig";
+import { AuthController } from "./auth.controller";
 
 const router = Router();
 
@@ -17,7 +17,7 @@ router.get(
       scope: ["profile", "email"],
       state: redirect as string,
     })(req, res, next);
-  }
+  },
 );
 
 router.get(
@@ -27,21 +27,21 @@ router.get(
     passport.authenticate("google", (err: any, user: any, info: any) => {
       if (err) {
         return res.redirect(
-          `${envVariables.FRONTEND_URL}/login?error=Something went wrong`
+          `${envVariables.NOTEVIA_URL}/login?error=Something went wrong`,
         );
       }
 
       if (!user) {
         return res.redirect(
-          `${envVariables.FRONTEND_URL}/login?error=${encodeURIComponent(
-            info?.message || "Cannot login"
-          )}`
+          `${envVariables.NOTEVIA_URL}/login?error=${encodeURIComponent(
+            info?.message || "Cannot login",
+          )}`,
         );
       }
       req.user = user;
       return AuthController.googleCallbackController(req, res, next);
     })(req, res, next);
-  }
+  },
 );
 
 export const authRoutes = router;

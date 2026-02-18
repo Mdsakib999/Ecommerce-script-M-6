@@ -4,39 +4,39 @@ import { useEffect, useRef, useState } from "react";
 export default function Faq() {
   const faqs = [
     {
-      question: "What types of electronic accessories do you sell?",
+      question: "What types of products does Notevia Limited sell?",
       answer:
-        "We offer a wide range of electronic accessories including headphones, chargers, phone cases, smartwatches, Bluetooth speakers, gaming accessories, and much more. All our products are from trusted brands with warranty support.",
+        "We specialize in premium office and school supplies, including writing instruments, notebooks, desk organizers, art supplies, and corporate gifting solutions. All our products are sourced from top-tier brands.",
     },
     {
-      question: "Do you ship internationally?",
+      question: "Do you offer bulk purchasing for businesses?",
       answer:
-        "Yes, we ship our products worldwide. Shipping fees and delivery time may vary depending on your location. You can calculate shipping costs at checkout.",
+        "Yes, we offer special rates and tailored solutions for corporate bulk orders. Please contact our corporate sales team for a custom quote and catalog.",
     },
     {
-      question: "How can I track my order?",
+      question: "What are your shipping options?",
       answer:
-        "After placing an order, you will receive a tracking number via email. You can use this number on our tracking portal to see real-time updates on your shipment.",
+        "We offer standard and express shipping nationwide. Standard delivery takes 3-5 business days, while express delivery ensures you get your supplies within 24-48 hours.",
     },
     {
-      question: "What is your return and refund policy?",
+      question: "Can I return items if I'm not satisfied?",
       answer:
-        "We offer a 30-day return policy on all electronic accessories. Products must be unused and in original packaging. Refunds are processed within 5-7 business days after we receive the returned item.",
+        "Yes, we have a hassle-free 7-day return policy. Items must be unused, in their original packaging, and accompanied by the receipt/invoice to be eligible for a return or exchange.",
     },
     {
-      question: "Do your products come with a warranty?",
+      question: "Do you provide custom printing services?",
       answer:
-        "Yes, most of our electronic accessories come with a 6-month to 1-year warranty depending on the brand. Warranty details are provided with each product description.",
+        "Absolutely! We offer custom printing on notebooks, pens, and other office essentials for branding purposes. Contact us to discuss your design needs.",
     },
     {
-      question: "What is your return and refund policy?",
+      question: "How can I track my stationary order?",
       answer:
-        "We offer a 30-day return policy on all electronic accessories. Products must be unused and in original packaging. Refunds are processed within 5-7 business days after we receive the returned item.",
+        "Once your order is dispatched, you'll receive a tracking ID via email and SMS. You can use this ID on our 'Track Order' page to get real-time updates.",
     },
     {
-      question: "Do your products come with a warranty?",
+      question: "Are your art supplies suitable for professionals?",
       answer:
-        "Yes, most of our electronic accessories come with a 6-month to 1-year warranty depending on the brand. Warranty details are provided with each product description.",
+        "Yes, we stock a range of professional-grade art supplies catering to artists, architects, and designers, alongside student-grade materials.",
     },
   ];
 

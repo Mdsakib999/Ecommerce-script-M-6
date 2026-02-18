@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import asyncHandler from "express-async-handler";
 import { NextFunction, Request, Response } from "express";
+import asyncHandler from "express-async-handler";
+import passport from "passport";
+import { envVariables } from "../../config/envConfig";
 import { setAuthCookie } from "../../utils/setCookie";
 import { createUserToken } from "../../utils/userToken";
-import passport from "passport";
 import { AuthServices } from "./auth.service";
-import { envVariables } from "../../config/envConfig";
 
 const credentialsLogin = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -38,7 +38,7 @@ const credentialsLogin = asyncHandler(
         }
       })();
     })(req, res, next);
-  }
+  },
 );
 
 const getNewAccessToken = asyncHandler(
@@ -49,7 +49,7 @@ const getNewAccessToken = asyncHandler(
       throw new Error("No refresh token received from cookies");
     }
     const tokenInfo = await AuthServices.getNewAccessToken(
-      refreshToken as string
+      refreshToken as string,
     );
 
     setAuthCookie(res, tokenInfo);
@@ -58,7 +58,7 @@ const getNewAccessToken = asyncHandler(
       message: "New Access Token Retrieved Successfully",
       data: tokenInfo,
     });
-  }
+  },
 );
 
 const logout = asyncHandler(
@@ -79,7 +79,7 @@ const logout = asyncHandler(
       message: "User Logged out Successfully",
       data: null,
     });
-  }
+  },
 );
 
 const googleCallbackController = asyncHandler(
@@ -101,10 +101,10 @@ const googleCallbackController = asyncHandler(
 
     res.redirect(
       `${
-        envVariables.FRONTEND_URL
-      }/${redirectTo}?success=${"Logged in successfully"}`
+        envVariables.NOTEVIA_URL
+      }/${redirectTo}?success=${"Logged in successfully"}`,
     );
-  }
+  },
 );
 
 export const AuthController = {

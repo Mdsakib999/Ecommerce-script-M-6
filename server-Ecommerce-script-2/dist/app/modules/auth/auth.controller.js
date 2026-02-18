@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const setCookie_1 = require("../../utils/setCookie");
 const userToken_1 = require("../../utils/userToken");
@@ -89,7 +89,7 @@ const googleCallbackController = (0, express_async_handler_1.default)((req, res,
     }
     const tokenInfo = (0, userToken_1.createUserToken)(user);
     (0, setCookie_1.setAuthCookie)(res, tokenInfo);
-    res.redirect(`${envConfig_1.envVariables.FRONTEND_URL}/${redirectTo}?success=${"Logged in successfully"}`);
+    res.redirect(`${envConfig_1.envVariables.NOTEVIA_URL}/${redirectTo}?success=${"Logged in successfully"}`);
 }));
 exports.AuthController = {
     credentialsLogin,

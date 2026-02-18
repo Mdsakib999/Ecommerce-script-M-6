@@ -42,7 +42,7 @@ export default function ContactPage() {
             </div>
             <div className="flex items-center gap-3">
               <Mail className="w-6 h-6 text-blue-600" />
-              <span>support@yourstore.com</span>
+              <span>support@notevia.com</span>
             </div>
             <div className="flex items-center gap-3">
               <Clock className="w-6 h-6 text-blue-600" />

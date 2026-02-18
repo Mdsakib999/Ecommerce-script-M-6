@@ -10,7 +10,7 @@ exports.envVariables = {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
     MONGODB_URL: process.env.MONGODB_URL,
-    FRONTEND_URL: process.env.FRONTEND_URL,
+    NOTEVIA_URL: process.env.NOTEVIA_URL,
     BCRYPT_SALT_ROUNDS: process.env.BCRYPT_SALT_ROUNDS,
     JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
     JWT_ACCESS_EXPIRES: process.env.JWT_ACCESS_EXPIRES,
