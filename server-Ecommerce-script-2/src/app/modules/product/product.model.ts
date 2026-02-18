@@ -1,0 +1,22 @@
+import { model, Schema } from "mongoose";
+import { IProduct } from "./product.interface";
+
+const ProductSchema = new Schema<IProduct>(
+  {
+    name: { type: String, required: true },
+    brand: { type: String, required: true },
+    category: { type: String, required: true },
+    price: { type: Number, required: true },
+    discountPrice: { type: Number },
+    quantity: { type: Number, required: true, default: 1 },
+    images: { type: [String], required: true },
+    inStock: { type: Boolean, default: true },
+    description: { type: String, required: true },
+    specifications: { type: String, default: "" },
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
+  },
+  { timestamps: true }
+);
+
+const Product = model<IProduct>("Product", ProductSchema);
+export default Product;
